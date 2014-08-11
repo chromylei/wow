@@ -1,0 +1,12 @@
+
+
+static_library("wow_base") {
+  sources = [
+    "mpq.cc",
+    "mpq.h",
+  ]
+  deps = [
+    "//wow/stormlib:stormlib",
+    "//wow/stormlib:storm",
+  ]
+}

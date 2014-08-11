@@ -1,10 +1,5 @@
 
-executable("wow_mapviewer") {
-  sources = [
-    "main.cc"
-  ]
-  deps = [
-    "//wow/stormlib:stormlib",
-    "//wow/stormlib:storm",
+group("wow_mapviewer") {
+  deps = ["sky:wow_sky",
   ]
 }

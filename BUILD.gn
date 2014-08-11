@@ -1,4 +1,7 @@
 
 group("wow") {
-  deps = ["stormlib:stormlib"]
+  deps = [
+    "stormlib:stormlib",
+    "mapviewer:wow_mapviewer",
+  ]
 }

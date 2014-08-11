@@ -1,0 +1,10 @@
+
+executable("wow_mapviewer") {
+  sources = [
+    "main.cc"
+  ]
+  deps = [
+    "//wow/stormlib:stormlib",
+    "//wow/stormlib:storm",
+  ]
+}

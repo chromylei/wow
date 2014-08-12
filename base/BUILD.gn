@@ -6,9 +6,14 @@ static_library("wow_base") {
     "mpq.h",
     "dbcfile.cc",
     "dbcfile.h",
+    "heightmap.cc",
+    "heightmap.h",
+    "grid.cc",
+    "grid.h",
   ]
   deps = [
     "//wow/stormlib:stormlib",
     "//wow/stormlib:storm",
+    "//azer/render:render",
   ]
 }

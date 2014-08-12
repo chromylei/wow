@@ -3,5 +3,6 @@ group("wow_mapviewer") {
   deps = [
     "sky:wow_sky",
     "dbc:wow_mapview_dbc",
+    "water:wow_mapview_water",
   ]
 }

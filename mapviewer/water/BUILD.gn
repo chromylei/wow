@@ -1,0 +1,9 @@
+
+executable("wow_mapview_water") {
+  sources = ["main.cc"]
+  deps = [
+    "//wow/base:wow_base",
+    "//azer/render:render",
+    "//base:appinit",
+  ]
+}

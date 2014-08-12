@@ -1,0 +1,8 @@
+
+executable("wow_mapview_dbc") {
+  sources = ["main.cc"]
+  deps = [
+    "//wow/base:wow_base",
+    "//base:appinit",
+  ]
+}

@@ -4,6 +4,8 @@ static_library("wow_base") {
   sources = [
     "mpq.cc",
     "mpq.h",
+    "dbcfile.cc",
+    "dbcfile.h",
   ]
   deps = [
     "//wow/stormlib:stormlib",

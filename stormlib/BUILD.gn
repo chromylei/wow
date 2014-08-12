@@ -1,3 +1,7 @@
+config("stormlib_config") {
+  include_dirs = ["wow/stormlib/StormLib/src/"]
+}
+
 shared_library("stormlib") {
   sources = [
     "StormLib/src/StormCommon.h"
@@ -238,6 +242,7 @@ shared_library("stormlib") {
   ldflags = [
     "/DEF:$defpath",
   ]
+  direct_dependent_configs = [":stormlib_config"]
 }
 
 shared_library("storm") {

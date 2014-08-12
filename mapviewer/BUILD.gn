@@ -1,5 +1,7 @@
 
 group("wow_mapviewer") {
-  deps = ["sky:wow_sky",
+  deps = [
+    "sky:wow_sky",
+    "dbc:wow_mapview_dbc",
   ]
 }

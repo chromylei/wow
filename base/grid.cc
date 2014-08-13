@@ -26,24 +26,23 @@ void ComputeNormal(Grid::Vertex* v, int vertex_num, DWORD* indices,
   }
 }
 
-void Grid::Init(const base::FilePath& filepath) {
+void Grid::Init() {
   azer::RenderSystem* rs = azer::RenderSystem::Current();
-  CHECK(HeightMapLoad(filepath, &height_map_));
   InitVertex();
 }
 
 
 void Grid::InitVertex() {
-  const int kRow = height_map_.width;
-  const int kColumn = height_map_.height;
+  const int kRow = kCellNum_;
+  const int kColumn = kCellNum_;
   const int kVertexNum = kRow * kColumn;
   for (int i = 0; i < kColumn; ++i) {
     for (int j = 0; j < kRow; ++j) {
       int idx = i * kRow + j;
       Vertex v;
-      v.position = azer::vec3((float)i, height_map_.map[idx].y, (float)j);
-      v.tex = azer::Vector2(100.0f * j / (float)kRow,
-                                100.0f * i / (float)kColumn);
+      v.position = azer::vec3((float)i, 0.0f, (float)j);
+      v.tex0 = azer::Vector2(j / (float)kRow, i / (float)kColumn);
+      v.tex1 = azer::Vector2(j, i);
       v.normal = azer::vec3(0.0f, 1.0f, 0.0f);
       vertices_.push_back(v);
     }

@@ -10,6 +10,8 @@ static_library("wow_base") {
     "heightmap.h",
     "grid.cc",
     "grid.h",
+    "camera_control.cc",
+    "camera_control.h",
   ]
   deps = [
     "//wow/stormlib:stormlib",

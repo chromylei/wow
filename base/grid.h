@@ -9,27 +9,29 @@
 
 class Grid {
  public:
-  Grid() {}
+  Grid(const int cell = 1024) : kCellNum_(cell) {}
 
   struct Vertex {
     azer::Vector3 position;
-    azer::Vector2 tex;
+    azer::Vector2 tex0;
+    azer::Vector2 tex1;
     azer::Vector3 normal;
   };
 
-  void Init(const base::FilePath& filepath);
+  void Init();
   const std::vector<Vertex>& vertices() { return vertices_;}
   const std::vector<int32>& indices() { return indices_;}
 
-  int width() const { return height_map_.width;}
-  int height() const { return height_map_.height;}
+  azer::VertexBufferPtr& GetVertexBuffer() { return vb_; }
+  azer::IndicesBufferPtr&  GetIndicesBuffer() { return ib_;}
  private:
   void InitVertex();
   azer::VertexBufferPtr vb_;
   azer::IndicesBufferPtr ib_;
   std::vector<Vertex> vertices_;
   std::vector<int32> indices_;
-  HeightMapInfo height_map_;
+  const int kCellNum_;
+  DISALLOW_COPY_AND_ASSIGN(Grid);
 };
 
 typedef std::shared_ptr<Grid> GridPtr;

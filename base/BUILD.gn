@@ -17,5 +17,6 @@ static_library("wow_base") {
     "//wow/stormlib:stormlib",
     "//wow/stormlib:storm",
     "//azer/render:render",
+    "//azer/util:azer_util",
   ]
 }

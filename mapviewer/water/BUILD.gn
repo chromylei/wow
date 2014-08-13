@@ -10,6 +10,7 @@ executable("wow_mapview_water") {
   deps = [
     "//wow/base:wow_base",
     "//azer/render:render",
+    "//azer/render_system/d3d11:d3d11_render_system",
     "//base:appinit",
     ":wow_mapview_water_grid_effect",
   ]

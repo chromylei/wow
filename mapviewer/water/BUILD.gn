@@ -1,8 +1,8 @@
 import("//build/templates/afx.gni")
 
-afx("wow_mapview_water_grid_effect") {
-  source = "grid.afx"
-  filename = "grid"
+afx("wow_mapview_water_tile_effect") {
+  source = "tile.afx"
+  filename = "tile"
 }
 
 executable("wow_mapview_water") {
@@ -12,6 +12,6 @@ executable("wow_mapview_water") {
     "//azer/render:render",
     "//azer/render_system/d3d11:d3d11_render_system",
     "//base:appinit",
-    ":wow_mapview_water_grid_effect",
+    ":wow_mapview_water_tile_effect",
   ]
 }

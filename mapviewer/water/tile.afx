@@ -1,9 +1,9 @@
 
 technique [
-    name = "grid"
+    name = "tile"
     ps_main="ps_main"
     vs_main="vs_main"
-    class_name="GridEffect"
+    class_name="TileEffect"
     ];
 
 struct DirLight {

@@ -7,9 +7,9 @@
 #include "azer/render/render.h"
 #include "wow/base/heightmap.h"
 
-class Grid {
+class Tile {
  public:
-  Grid(const int cell = 1024) : kCellNum_(cell) {}
+  Tile(const int cell = 1024) : kCellNum_(cell) {}
 
   void Init();
   const std::vector<azer::Vector3>& vertices() { return vertices_;}
@@ -21,7 +21,7 @@ class Grid {
   std::vector<azer::Vector3> vertices_;
   std::vector<int32> indices_;
   const int kCellNum_;
-  DISALLOW_COPY_AND_ASSIGN(Grid);
+  DISALLOW_COPY_AND_ASSIGN(Tile);
 };
 
-typedef std::shared_ptr<Grid> GridPtr;
+typedef std::shared_ptr<Tile> TilePtr;

@@ -1,14 +1,14 @@
-#include "wow/base/grid.h"
+#include "wow/base/tile.h"
 
 using azer::GpuConstantsTable;
 
-void Grid::Init() {
+void Tile::Init() {
   azer::RenderSystem* rs = azer::RenderSystem::Current();
   InitVertex();
 }
 
 
-void Grid::InitVertex() {
+void Tile::InitVertex() {
   const int kRow = kCellNum_;
   const int kColumn = kCellNum_;
   const int kVertexNum = kRow * kColumn;

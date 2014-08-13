@@ -8,8 +8,8 @@ static_library("wow_base") {
     "dbcfile.h",
     "heightmap.cc",
     "heightmap.h",
-    "grid.cc",
-    "grid.h",
+    "tile.cc",
+    "tile.h",
     "camera_control.cc",
     "camera_control.h",
   ]

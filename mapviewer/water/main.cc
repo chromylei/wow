@@ -4,11 +4,11 @@
 #include "base/base.h"
 #include "base/command_line.h"
 #include "base/files/file_path.h"
-#include "wow/base/grid.h"
+#include "wow/base/tile.h"
 #include "wow/base/camera_control.h"
 
 #include <tchar.h>
-#include "grid.afx.h"
+#include "tile.afx.h"
 #define EFFECT_GEN_DIR "out/dbg/gen/wow/mapviewer/water/"
 #define SHADER_NAME "grid.afx"
 const char* kHeightmapPath = "sbox/terrain/res/heightmap01.bmp";
@@ -26,8 +26,8 @@ class MainDelegate : public azer::WindowHost::Delegate {
  private:
   void InitPhysicsBuffer(azer::RenderSystem* rs);
   azer::Camera camera_;
-  Grid grid_;
-  std::unique_ptr<GridEffect> effect_;
+  Tile grid_;
+  std::unique_ptr<TileEffect> effect_;
   azer::VertexBufferPtr vb_;
   azer::IndicesBufferPtr ib_;
   DISALLOW_COPY_AND_ASSIGN(MainDelegate);
@@ -36,7 +36,7 @@ class MainDelegate : public azer::WindowHost::Delegate {
 void MainDelegate::InitPhysicsBuffer(azer::RenderSystem* rs) {
   azer::VertexDataPtr vdata(
       new azer::VertexData(effect_->GetVertexDesc(), grid_.vertices().size()));
-  GridEffect::Vertex* v = (GridEffect::Vertex*)vdata->pointer();
+  TileEffect::Vertex* v = (TileEffect::Vertex*)vdata->pointer();
   for (int i = 0; i < grid_.GetCellNum(); ++i) {
     for (int j = 0; j < grid_.GetCellNum(); ++j) {
       int index = i * grid_.GetCellNum() + j;
@@ -69,7 +69,7 @@ void MainDelegate::Init() {
   azer::ShaderArray shaders;
   CHECK(azer::LoadVertexShader(EFFECT_GEN_DIR SHADER_NAME ".vs", &shaders));
   CHECK(azer::LoadPixelShader(EFFECT_GEN_DIR SHADER_NAME ".ps", &shaders));
-  effect_.reset(new GridEffect(shaders.GetShaderVec(), rs));
+  effect_.reset(new TileEffect(shaders.GetShaderVec(), rs));
 
   grid_.Init();
   InitPhysicsBuffer(rs);

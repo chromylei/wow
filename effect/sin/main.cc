@@ -8,9 +8,9 @@
 #include "wow/base/camera_control.h"
 
 #include <tchar.h>
-#include "tile.afx.h"
+#include "sinwave.afx.h"
 #define EFFECT_GEN_DIR "out/dbg/gen/wow/effect/tile/"
-#define SHADER_NAME "tile.afx"
+#define SHADER_NAME "sinwave.afx"
 const char* kHeightmapPath = "sbox/terrain/res/heightmap01.bmp";
 using base::FilePath;
 
@@ -27,7 +27,7 @@ class MainDelegate : public azer::WindowHost::Delegate {
   void InitPhysicsBuffer(azer::RenderSystem* rs);
   azer::Camera camera_;
   Tile grid_;
-  std::unique_ptr<TileEffect> effect_;
+  std::unique_ptr<SinwaveEffect> effect_;
   azer::VertexBufferPtr vb_;
   azer::IndicesBufferPtr ib_;
   DISALLOW_COPY_AND_ASSIGN(MainDelegate);
@@ -36,7 +36,7 @@ class MainDelegate : public azer::WindowHost::Delegate {
 void MainDelegate::InitPhysicsBuffer(azer::RenderSystem* rs) {
   azer::VertexDataPtr vdata(
       new azer::VertexData(effect_->GetVertexDesc(), grid_.vertices().size()));
-  TileEffect::Vertex* v = (TileEffect::Vertex*)vdata->pointer();
+  SinwaveEffect::Vertex* v = (SinwaveEffect::Vertex*)vdata->pointer();
   for (int i = 0; i < grid_.GetCellNum(); ++i) {
     for (int j = 0; j < grid_.GetCellNum(); ++j) {
       int index = i * grid_.GetCellNum() + j;
@@ -69,7 +69,7 @@ void MainDelegate::Init() {
   azer::ShaderArray shaders;
   CHECK(azer::LoadVertexShader(EFFECT_GEN_DIR SHADER_NAME ".vs", &shaders));
   CHECK(azer::LoadPixelShader(EFFECT_GEN_DIR SHADER_NAME ".ps", &shaders));
-  effect_.reset(new TileEffect(shaders.GetShaderVec(), rs));
+  effect_.reset(new SinwaveEffect(shaders.GetShaderVec(), rs));
 
   grid_.Init();
   InitPhysicsBuffer(rs);
@@ -92,6 +92,7 @@ void MainDelegate::OnRenderScene(double time, float delta_time) {
   renderer->Clear(azer::Vector4(0.0f, 0.0f, 0.0f, 1.0f));
   renderer->ClearDepthAndStencil();
 
+  effect_->SetTime(delta_time);
   effect_->SetPVW(camera_.GetProjViewMatrix());
   effect_->SetWorld(azer::Matrix4::kIdentity);
   effect_->Use(renderer);

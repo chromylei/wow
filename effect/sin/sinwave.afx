@@ -1,0 +1,49 @@
+
+technique [
+    name = "sinwave"
+    ps_main="ps_main"
+    vs_main="vs_main"
+    class_name="SinwaveEffect"
+    ];
+
+struct DirLight {
+  vec4 dir;
+  vec4 diffuse;
+  vec4 ambient;
+};
+
+[uniform_func="SetPVW"] uniform mat4 pvw;
+[uniform_func="SetWorld"] uniform mat4 world;
+[uniform_func="SetTime"] uniform float time;
+
+exchange struct VsOutput {
+  [semantic="position" system="true"]
+  vec4 position;
+  vec2 tex0;
+  vec4 normal;
+};
+
+exchange struct VSInput {
+  vec3 position;
+  vec2 tex0;
+  vec2 tex1;
+  vec2 tex2;
+  vec3 normal;
+};
+
+VsOutput vs_main(VSInput input) {
+  VsOutput o;
+  float omega = 0.5 * 3.14; 
+  vec4 pos = vec4(input.position, 1.0);
+  pos.y = sin(omega * pos.x - time);
+  o.position = pvw * vec4(input.position, 1.0);
+  o.tex0 = input.tex1;
+  o.normal = world * vec4(input.normal, 0.0);
+  return o;
+}
+
+[system="true" semantic="target"]
+vec4 ps_main(VsOutput o) {
+  return vec4(0.6, 0.6, 0.6, 1.0);
+}
+

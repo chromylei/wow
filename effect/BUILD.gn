@@ -2,5 +2,6 @@
 group("wow_effect") {
   deps = [
     "tile:wow_effect_tile",
+    "sin:wow_effect_sinwave",
   ]
 }

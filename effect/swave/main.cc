@@ -8,9 +8,9 @@
 #include "wow/base/camera_control.h"
 
 #include <tchar.h>
-#include "sinwave.afx.h"
-#define EFFECT_GEN_DIR "out/dbg/gen/wow/effect/sin/"
-#define SHADER_NAME "sinwave.afx"
+#include "simplewave.afx.h"
+#define EFFECT_GEN_DIR "out/dbg/gen/wow/effect/swave/"
+#define SHADER_NAME "simplewave.afx"
 const char* kHeightmapPath = "sbox/terrain/res/heightmap01.bmp";
 using base::FilePath;
 
@@ -25,18 +25,20 @@ class MainDelegate : public azer::WindowHost::Delegate {
   virtual void OnQuit() {}
  private:
   void InitPhysicsBuffer(azer::RenderSystem* rs);
+  void InitWave();
   azer::Camera camera_;
   Tile grid_;
-  std::unique_ptr<SinwaveEffect> effect_;
+  std::unique_ptr<SimpleWaveEffect> effect_;
   azer::VertexBufferPtr vb_;
   azer::IndicesBufferPtr ib_;
+  SimpleWaveEffect::WaveInfo wave_;
   DISALLOW_COPY_AND_ASSIGN(MainDelegate);
 };
 
 void MainDelegate::InitPhysicsBuffer(azer::RenderSystem* rs) {
   azer::VertexDataPtr vdata(
       new azer::VertexData(effect_->GetVertexDesc(), grid_.vertices().size()));
-  SinwaveEffect::Vertex* v = (SinwaveEffect::Vertex*)vdata->pointer();
+  SimpleWaveEffect::Vertex* v = (SimpleWaveEffect::Vertex*)vdata->pointer();
   for (int i = 0; i < grid_.GetCellNum(); ++i) {
     for (int j = 0; j < grid_.GetCellNum(); ++j) {
       int index = i * grid_.GetCellNum() + j;
@@ -69,8 +71,9 @@ void MainDelegate::Init() {
   azer::ShaderArray shaders;
   CHECK(azer::LoadVertexShader(EFFECT_GEN_DIR SHADER_NAME ".vs", &shaders));
   CHECK(azer::LoadPixelShader(EFFECT_GEN_DIR SHADER_NAME ".ps", &shaders));
-  effect_.reset(new SinwaveEffect(shaders.GetShaderVec(), rs));
+  effect_.reset(new SimpleWaveEffect(shaders.GetShaderVec(), rs));
 
+  InitWave();
   grid_.Init();
   InitPhysicsBuffer(rs);
 
@@ -92,11 +95,14 @@ void MainDelegate::OnRenderScene(double time, float delta_time) {
   renderer->Clear(azer::Vector4(0.0f, 0.0f, 0.0f, 1.0f));
   renderer->ClearDepthAndStencil();
 
-  effect_->SetWave(azer::Vector4(2.0f * 3.14f, 0.2f, 0.0f, (float)time));
+  effect_->SetWave(wave_);
   effect_->SetPVW(camera_.GetProjViewMatrix());
   effect_->SetWorld(azer::Matrix4::kIdentity);
   effect_->Use(renderer);
   renderer->DrawIndex(vb_.get(), ib_.get(), azer::kTriangleList);
+}
+
+void MainDelegate::InitWave() {
 }
 
 int main(int argc, char* argv[]) {

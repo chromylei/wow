@@ -1,0 +1,109 @@
+
+technique [
+    name = "simplewave"
+    ps_main="ps_main"
+    vs_main="vs_main"
+    class_name="SimpleWaveEffect"
+    ];
+
+struct DirLight {
+  vec4 dir;
+  vec4 diffuse;
+  vec4 ambient;
+};
+
+struct WaveInfo {
+  vec4 dirx;
+  vec4 diry;
+  vec4 amplitude;
+  vec4 frequency;
+  vec4 phase;
+  vec4 len;
+  float ooedge_length;
+  float scale; 
+};
+
+[uniform_func="SetPVW"] uniform mat4 pvw;
+[uniform_func="SetWorld"] uniform mat4 world;
+[uniform_func="SetWave"] uniform WaveInfo uwave;
+
+
+vec4 CalcSinCos(vec4 wpos, WaveInfo wave, out vec4 sines, out vec4 cosines) {
+  // dot x and y with direction vectors
+  vec4 dists = wave.dirx * wpos.xxxx;
+  dists = wave.diry * wpos.yyyy + dists;
+
+  // scale in our frequency and add in our phase
+  dists = dists * wave.frequency;
+  dists += wave.phase;
+
+  const float kPi = 3.14159265f;
+  const float kTwoPi = 2 * kPi;
+  const float kOOTwoPi = 1.0f / kTwoPi;
+
+  // Mod into range [-Pi ... Pi]
+  dists += kPi;
+  dists *= kOOTwoPi;
+  dists = frac(dists);
+  dists *= kTwoPi;
+  dists -= kPi;
+
+  vec4 dists2 = dists * dists; 
+  vec4 dists3 = dists2 * dists;
+  vec4 dists4 = dists2 * dists2;
+  vec4 dists5 = dists3 * dists2;
+  vec4 dists6 = dists3 * dists3;
+  vec4 dists7 = dists4 * dists3;
+
+  const vec4 kSinConsts = vec4(1.0f, -1.0f/6.0f, 1.0f/120.0f, -1.0f/5040.0f);
+  const vec4 kCosConsts = vec4(1, -1.0f/2.0f, 1.0f/24.0f, -1.0f / 720.0);
+  sines = dists + dists3 * kSinConsts.yyyy + dists5 * kSinConsts.zzzz
+      + dists7 * kSinConsts.wwww;
+  cosines = kCosConsts.xxxx + dists2 * kCosConsts.yyyy
+      + dists4 * kCosConsts.zzzz + dists6 * kCosConsts.wwww;
+  
+  vec4 filteredAmp = wave.len * wave.ooedge_length;
+  filteredAmp = max(filteredAmp, 0.0f);
+  filteredAmp = min(filteredAmp, 1.0f);
+  filteredAmp = filteredAmp * wave.scale; 
+  filteredAmp = filteredAmp * wave.amplitude;
+
+  sines = sines * filteredAmp;
+  cosines = cosines * filteredAmp * wave.scale;
+
+  return wpos;
+}
+
+exchange struct VsOutput {
+  [semantic="position" system="true"]
+  vec4 position;
+  vec2 tex0;
+  vec4 normal;
+};
+
+exchange struct VSInput {
+  vec3 position;
+  vec2 tex0;
+  vec2 tex1;
+  vec2 tex2;
+  vec3 normal;
+};
+
+VsOutput vs_main(VSInput input) {
+  VsOutput o;
+  vec4 wpos = vec4(input.position, 1.0);
+  o.position = pvw * wpos;
+  o.tex0 = input.tex1;
+  o.normal = world * vec4(input.normal, 0.0);
+
+  vec4 sines;
+  vec4 cosines;
+  o.position = CalcSinCos(wpos, uwave, sines, cosines);
+  return o;
+}
+
+[system="true" semantic="target"]
+vec4 ps_main(VsOutput o) {
+  return vec4(0.6, 0.6, 0.6, 1.0);
+}
+

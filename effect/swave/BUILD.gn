@@ -1,0 +1,17 @@
+import("//build/templates/afx.gni")
+
+afx("wow_effect_sin_effect") {
+  source = "simplewave.afx"
+  filename = "simplewave"
+}
+
+executable("wow_effect_simplewave") {
+  sources = ["main.cc"]
+  deps = [
+    "//wow/base:wow_base",
+    "//azer/render:render",
+    "//azer/render_system/d3d11:d3d11_render_system",
+    "//base:appinit",
+    ":wow_effect_sin_effect",
+  ]
+}
